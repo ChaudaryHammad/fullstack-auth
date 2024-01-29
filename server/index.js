@@ -4,6 +4,7 @@ require("dotenv").config({
   path: "./config/.env",
 });
 
+
 const userRoute = require("./routes/user");
 const authRoute = require("./routes/auth");
 const connectDB = require("./database/connection.js");
@@ -11,6 +12,7 @@ const connectDB = require("./database/connection.js");
 connectDB();
 
 //middlewars
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
