@@ -6,6 +6,7 @@ import Signup from "./Pages/Signup";
 import Profile from "./Pages/Profile";
 import Header from "./components/Header";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -18,6 +19,8 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
+
+
     </BrowserRouter>
   );
 }
