@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import {toast} from 'react-toastify'
-
+import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
 function SignIn() {
-const [formData,setFormData] = useState({})
-const [loading,setLoading] = useState(false)
-
+  const dispatch = useDispatch()
+  
+  const [formData,setFormData] = useState({})
+const {loading,error} = useSelector(state=>state.user)  
+const navigate = useNavigate()
   const handleChange=(e)=>{
     setFormData({
       ...formData,
@@ -18,7 +21,7 @@ const [loading,setLoading] = useState(false)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(signInStart())
       
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
@@ -38,12 +41,13 @@ const [loading,setLoading] = useState(false)
       // Display success message from server response
       toast.success(data.message || "Sign in successful!");
       setFormData({});
-      setLoading(false);
+     dispatch(signInSuccess(data))
+      navigate('/')
     } catch (error) {
       // Display error message from server response or default message
       toast.error(error.message || "Sign up failed. Please try again.");
   
-      setLoading(false);
+      dispatch(signInFailure(error))
     }
   };
 

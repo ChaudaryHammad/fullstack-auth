@@ -1,13 +1,13 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function SignUp() {
   const [formData, setFormData] = useState({});
  
   const [loading, setLoading] = useState(false);
-
+const navigate = useNavigate()
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
@@ -36,6 +36,7 @@ function SignUp() {
       toast.success(data.message || "Sign up successful!");
       setFormData({});
       setLoading(false);
+      navigate('/sign-in')
     } catch (error) {
       // Display error message from server response or default message
       toast.error(error.message || "Sign up failed. Please try again.");
