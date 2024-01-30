@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import OAuth from "./OAuth";
 
 function SignUp() {
   const [formData, setFormData] = useState({});
@@ -151,8 +152,8 @@ const navigate = useNavigate()
             </span>
           </p>
           <p className="p line">Or</p>
-          <div className="flex-row"></div>
-       
+          
+       <OAuth/>
         </form>
       </div>
     </div>
