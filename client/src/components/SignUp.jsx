@@ -1,41 +1,45 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { toast } from "react-toastify";
 
 function SignUp() {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(false);
+ 
   const [loading, setLoading] = useState(false);
 
-
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setLoading(true);
       
-      const response = await axios.post("/api/auth/signup", formData, {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify(formData),
       });
-
-      const data = response.data;
-      console.log(data);
-
-      // Reset form and loading state on successful submission
+  
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Sign up failed");
+      }
+  
+      const data = await res.json();
+  
+      // Display success message from server response
+      toast.success(data.message || "Sign up successful!");
       setFormData({});
       setLoading(false);
     } catch (error) {
-      console.error("Error during form submission:", error);
-      setError(true);
+      // Display error message from server response or default message
+      toast.error(error.message || "Sign up failed. Please try again.");
+  
       setLoading(false);
     }
   };
@@ -66,6 +70,7 @@ function SignUp() {
               name="userName"
               className="input"
               placeholder="Enter your Name"
+              value={formData.userName || ''}
             />
           </div>
           <div className="flex-column">
@@ -101,6 +106,7 @@ function SignUp() {
               name="email"
               className="input"
               placeholder="Enter your Email"
+              value={formData.email || ''}
             />
           </div>
           <div className="flex-column">
@@ -123,6 +129,7 @@ function SignUp() {
               name="password"
               className="input"
               placeholder="Enter your Password"
+              value={formData.password || ''}
             />
             <svg
               viewBox="0 0 576 512"
@@ -144,11 +151,8 @@ function SignUp() {
           </p>
           <p className="p line">Or</p>
           <div className="flex-row"></div>
+       
         </form>
-
-        <p className="text-center bg-white text-red-700 text-[17px] p-2 mt-5">
-          {error && "Something went wrong!"}
-        </p>
       </div>
     </div>
   );
