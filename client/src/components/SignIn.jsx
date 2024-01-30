@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {toast} from 'react-toastify'
 import {signInStart,signInSuccess,signInFailure} from '../redux/user/userSlice'
@@ -7,7 +7,7 @@ function SignIn() {
   const dispatch = useDispatch()
   
   const [formData,setFormData] = useState({})
-const {loading,error} = useSelector(state=>state.user)  
+// const {loading,error} = useSelector(state=>state.user)  
 const navigate = useNavigate()
   const handleChange=(e)=>{
     setFormData({
