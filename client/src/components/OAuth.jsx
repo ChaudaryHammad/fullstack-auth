@@ -3,8 +3,10 @@ import {GoogleAuthProvider,getAuth,signInWithPopup} from 'firebase/auth'
 import {app} from '../firebase'
 import { useDispatch } from 'react-redux'
 import { signInSuccess } from '../redux/user/userSlice'
+import { useNavigate } from 'react-router-dom'
 function OAuth() {
 const dispatch = useDispatch()
+const navigate = useNavigate()
     const handleGoogleAuth = async()=>{
         try {
 
@@ -26,6 +28,8 @@ const dispatch = useDispatch()
           const data = await res.json()
         //   console.log(data)
           dispatch(signInSuccess(data))
+          toast.success("Sign up successful")
+          navigate('/')
         } catch (error) {
             toast.error(error.message || "Sign up failed. Please try again.");
         }

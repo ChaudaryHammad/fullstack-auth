@@ -7,6 +7,7 @@ import Profile from "./Pages/Profile";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -17,7 +18,10 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/sign-in" element={<Signin />} />
         <Route path="/sign-up" element={<Signup />} />
+        <Route element={<PrivateRoute/>}>
         <Route path="/profile" element={<Profile />} />
+        </Route>
+       
         <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
 
