@@ -4,13 +4,14 @@ import Footer from "../components/Footer"
 
 function Home() {
   return (
-    <>
-      <section className="bg-black  text-white">
+    <div className="h-[80vh]">
+      <section className="text-white bg-fixed w-full h-full bg-cover bg-center"   style={{
+          backgroundImage: 'url("https://images.unsplash.com/photo-1682687981974-c5ef2111640c?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")'}}>
       <hr />
   <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-full lg:items-center">
     <div className="mx-auto max-w-3xl text-center">
       <h1
-        className="bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl"
+        className="bg-gradient-to-r from-black via-blue-500 to-black bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl"
       >
         Understand User Authentication Flow.
 
@@ -48,7 +49,7 @@ function Home() {
 <br />
 <br />
 <Footer/>
-    </>
+    </div>
   )
 }
 

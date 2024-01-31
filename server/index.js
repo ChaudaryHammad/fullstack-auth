@@ -3,7 +3,7 @@ const app = express();
 require("dotenv").config({
   path: "./config/.env",
 });
-
+const cookieParser = require("cookie-parser");
 
 const userRoute = require("./routes/user");
 const authRoute = require("./routes/auth");
@@ -15,7 +15,7 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
 
 //api routes
 app.use("/api/user", userRoute);

@@ -1,8 +1,10 @@
 const express = require('express');
-const { test } = require('../controller/user.js');
+const { updateUser } = require('../controller/user.js');
+const verifyUser = require('../utils/verifyUser.js');
 const router = express.Router();
 
-router.get('/',test); 
+
+router.post('/update/:id',verifyUser,updateUser)
 
 
 
