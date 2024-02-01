@@ -1,59 +1,80 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import {app} from "../firebase";
-import {getStorage,ref,uploadBytesResumable,getDownloadURL} from 'firebase/storage'
+import { app } from "../firebase";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import { FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { updateUserStart,updateUserSuccess,updateUserFailure } from "../redux/user/userSlice";
 function Profile() {
+  const dispatch = useDispatch();
   const fileRef = useRef(null);
   const [image, setImage] = useState(undefined);
-  const { currentUser } = useSelector((state) => state.user);
-  const [loading, setLoading] = useState(false);
   const [imagePercent, setImagePercent] = useState(0);
-  const [formData, setFormData] = useState({});
   const [imageError, setImageError] = useState(false);
-useEffect(()=>{
-if(image){
-  handleFileUpload(image)
-}
-},[image])
+  const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
-const handleFileUpload = async (image) => {
-  const storage = getStorage(app)
-  const fileName = new Date().getTime() + image.name;
-  const storageRef = ref(storage, fileName);
-  const uploadTask = uploadBytesResumable(storageRef, image);
-  uploadTask.on(
-    'state_changed',
-    (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-     setImagePercent(Math.round(progress))
-    },
-    (error) => {
-    toast.error(error.message || "Upload failed. Please try again.");
-    setImageError(true);
-  },
-
- ()=>{
-  getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-   setFormData({
-    ...formData,
-    profilePicture:downloadURL
-   })
-  });
- }
-
-
-  );
-};
-
-
-  const handleChange = () => {};
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const { currentUser, loading, error } = useSelector((state) => state.user);
+  useEffect(() => {
+    if (image) {
+      handleFileUpload(image);
+    }
+  }, [image]);
+  const handleFileUpload = async (image) => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + image.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImagePercent(Math.round(progress));
+      },
+      (error) => {
+        toast.error(error.message);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, profilePicture: downloadURL })
+        );
+      }
+    );
+  };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      dispatch(updateUserFailure(error));
+    }
+  };
   return (
     <div>
       <div className=" flex justify-center items-center">
@@ -70,7 +91,7 @@ const handleFileUpload = async (image) => {
             <div className="flex justify-center mt-5 relative">
               <img
                 className="rounded-full object-cover w-32 h-32"
-                src={formData.profilePicture ||currentUser?.profilePicture}
+                src={formData.profilePicture || currentUser?.profilePicture}
                 alt=""
               />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity ease-in-out duration-300 hover:opacity-100">
@@ -84,22 +105,23 @@ const handleFileUpload = async (image) => {
                 </div>
               </div>
             </div>
-<div className="flex justify-center h-[20px]" >
-<p className='text-sm self-center'>
-          {imageError ? (
-            <span className='text-red-700'>
-              Error uploading image (file size must be less than 2 MB)
-            </span>
-          ) : imagePercent > 0 && imagePercent < 100 ? (
-            <span className='text-slate-700'>{`Uploading: ${imagePercent} %`}</span>
-          ) : imagePercent === 100 ? (
-            <span className='text-green-700'>Image uploaded successfully</span>
-          ) : (
-            ''
-          )}
-        </p>
-       
-</div>    
+            <div className="flex justify-center h-[20px]">
+              <p className="text-sm self-center">
+                {imageError ? (
+                  <span className="text-red-700">
+                    Error uploading image (file size must be less than 2 MB)
+                  </span>
+                ) : imagePercent > 0 && imagePercent < 100 ? (
+                  <span className="text-slate-700">{`Uploading: ${imagePercent} %`}</span>
+                ) : imagePercent === 100 ? (
+                  <span className="text-green-700">
+                    Image uploaded successfully
+                  </span>
+                ) : (
+                  ""
+                )}
+              </p>
+            </div>
             <div className="inputForm mt-5">
               <svg
                 height={20}
@@ -122,7 +144,7 @@ const handleFileUpload = async (image) => {
                 defaultValue={currentUser?.userName}
               />
             </div>
-           
+
             <div className="inputForm">
               <svg
                 fill="none"
@@ -156,7 +178,7 @@ const handleFileUpload = async (image) => {
                 defaultValue={currentUser?.email}
               />
             </div>
-            
+
             <div className="inputForm">
               <svg
                 height={20}
