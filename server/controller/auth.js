@@ -112,4 +112,10 @@ const google = async (req, res, next) => {
   }
 };
 
-module.exports = { signup, signin, google };
+const logout = (req, res) => {
+  res.clearCookie("access_token").json({ message: "logged out" });
+};
+
+
+
+module.exports = { signup, signin, google ,logout};

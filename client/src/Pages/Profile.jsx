@@ -10,7 +10,8 @@ import {
 import { FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { updateUserStart,updateUserSuccess,updateUserFailure } from "../redux/user/userSlice";
+import { updateUserStart,updateUserSuccess,updateUserFailure ,logoutUser,deleteUserFailure,deleteUserStart,deleteUserSuccess} from "../redux/user/userSlice";
+import { useNavigate } from 'react-router-dom';
 function Profile() {
   const dispatch = useDispatch();
   const fileRef = useRef(null);
@@ -19,7 +20,7 @@ function Profile() {
   const [imageError, setImageError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
-
+const navigate = useNavigate()
   const { currentUser, loading, error } = useSelector((state) => state.user);
   useEffect(() => {
     if (image) {
@@ -75,6 +76,42 @@ function Profile() {
       dispatch(updateUserFailure(error));
     }
   };
+
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      dispatch(deleteUserSuccess(data));
+      toast.success(data.message);
+      navigate('/')
+    } catch (error) {
+      toast.error(error.message);
+      dispatch(deleteUserFailure(error));
+    }
+  }
+
+
+  const handleLogOutUser = async () => {
+    try {
+      const res = await fetch(`/api/auth/logout`, {
+        method: 'GET',
+      });
+      const data = await res.json();
+      dispatch(logoutUser());
+      if (data.success === false) {
+        toast.error(data.message);
+        return;
+      }
+      toast.success(data.message);
+      navigate('/')
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
   return (
     <div>
       <div className=" flex justify-center items-center">
@@ -213,8 +250,8 @@ function Profile() {
               {loading ? "Loading..." : "Update"}
             </button>
             <div className="flex justify-between text-red-700">
-              <span>Delete your account</span>
-              <span>Sign out</span>
+              <span className="hover:cursor-pointer" onClick={handleDeleteUser}>Delete your account</span>
+              <span className="hover:cursor-pointer" onClick={handleLogOutUser}>Sign out</span>
             </div>
           </form>
         </div>
