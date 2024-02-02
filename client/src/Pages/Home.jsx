@@ -13,9 +13,9 @@ function Home() {
       <h1
         className="bg-gradient-to-r from-black via-blue-500 to-black bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl"
       >
-        Understand User Authentication Flow.
+        Understand User Authentication and Authorization Flow.
 
-        <span className="sm:block"> Stay Secured. </span>
+        <span className="sm:block"> Stay secure and stay connected. </span>
       </h1>
 
       <p className="mx-auto mt-4 max-w-xl sm:text-xl/relaxed">
