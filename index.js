@@ -9,7 +9,7 @@ const connectDB = require("./database/connection.js");
 const cors = require('cors');
 //connect to DB
 connectDB();
-const __dirname = path.resolve()
+
 
 //middlewars
 
@@ -19,16 +19,7 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, "./client/dist")))
-app.get("*", (req,res) =>{
-  res.sendFile(
-    path.join(__dirname, "./client/dist/index.html"),
-    function (err){
-      res.status(500).send(err)
-      
 
-    }
-  )
-})
 
 
 //api routes
@@ -45,6 +36,17 @@ app.use((err,req,res,next)=>{
         success:false,
         message,
         statusCode});
+})
+
+app.get("*", (req,res) =>{
+  res.sendFile(
+    path.join(__dirname, "./client/dist/index.html"),
+    function (err){
+      res.status(500).send(err)
+      
+
+    }
+  )
 })
 
 
