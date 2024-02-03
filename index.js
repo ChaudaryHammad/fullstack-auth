@@ -35,11 +35,14 @@ app.use((err,req,res,next)=>{
         statusCode});
 })
 
-app.use(express.static(path.resolve(__dirname, "./client/dist")))
+const __dirname = path.resolve()
+
+
+app.use(express.static(path.join(__dirname, "./client/dist")))
 
 
 app.get("*", (req, res) => {
-  const indexPath = path.resolve("./client/dist/index.html");
+  const indexPath = path.join("./client/dist/index.html");
   res.sendFile(indexPath, (err) => {
     if (err) {
       console.error("Error serving index.html:", err);
