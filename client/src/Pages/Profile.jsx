@@ -57,7 +57,7 @@ const navigate = useNavigate()
     e.preventDefault();
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`/user/update/${currentUser._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const navigate = useNavigate()
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`/user/delete/${currentUser._id}`, {
         method: 'DELETE',
       });
       const data = await res.json();
@@ -97,7 +97,7 @@ const navigate = useNavigate()
 
   const handleLogOutUser = async () => {
     try {
-      await fetch('/api/auth/signout');
+      await fetch('/auth/signout');
       dispatch(logoutUser())
       toast.success('Logged out successfully');
     } catch (error) {

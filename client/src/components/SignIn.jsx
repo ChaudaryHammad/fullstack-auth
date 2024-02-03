@@ -24,7 +24,7 @@ const navigate = useNavigate()
     try {
       dispatch(signInStart())
       
-      const res = await fetch('/api/auth/signin', {
+      const res = await fetch('/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
