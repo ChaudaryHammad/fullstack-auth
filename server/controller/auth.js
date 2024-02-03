@@ -113,7 +113,12 @@ const google = async (req, res, next) => {
 };
 
 const logout = (req, res) => {
-  res.clearCookie("access_token").json({ message: "logged out" });
+  try {
+    res.clearCookie("access_token").json({ message: "logged out" });
+  } catch (error) {
+    next(error);
+    console.log(error)
+  }
 };
 
 

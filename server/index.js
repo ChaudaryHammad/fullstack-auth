@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
-
+const path = require("path");
 const userRoute = require("./routes/user");
 const authRoute = require("./routes/auth");
 const connectDB = require("./database/connection.js");
@@ -14,6 +14,20 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+
+app.use(express.static(path.join(__dirname, "./client/dist")))
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "./client/dist/index.html"),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    }
+  );
+});
+
 
 //api routes
 app.use("/api/user", userRoute);
