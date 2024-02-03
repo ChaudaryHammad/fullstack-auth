@@ -9,6 +9,7 @@ const connectDB = require("./database/connection.js");
 const cors = require('cors');
 //connect to DB
 connectDB();
+const __dirname = path.resolve()
 
 //middlewars
 
