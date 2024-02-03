@@ -35,21 +35,21 @@ app.use((err,req,res,next)=>{
         statusCode});
 })
 
-const __dirname = path.resolve()
 
 
 app.use(express.static(path.join(__dirname, "./client/dist")))
 
+app.get("*", (req,res) =>{
+  res.sendFile(
+    path.join(__dirname, "./frontend/build/index.html"),
+    function (err){
+      res.status(500).send(err)
+      
 
-app.get("*", (req, res) => {
-  const indexPath = path.join("./client/dist/index.html");
-  res.sendFile(indexPath, (err) => {
-    if (err) {
-      console.error("Error serving index.html:", err);
-      res.status(500).send(err);
     }
-  });
-});
+  )
+})
+
 
 //server
 app.listen(process.env.PORT, () => {
