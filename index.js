@@ -18,9 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 
-app.use(express.static(path.join(__dirname, "client/dist")))
-
-
 
 //api routes
 app.use("/user", userRoute);
@@ -37,6 +34,9 @@ app.use((err,req,res,next)=>{
         message,
         statusCode});
 })
+
+app.use(express.static(path.join(__dirname, "./client/dist")))
+
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client/dist/index.html"), (err) => {
